@@ -11,9 +11,9 @@ namespace Yubikey.TokenSimulator.Configuration
 		private const string IncrementSessionProperty = "incrementSession";
 
 		[ConfigurationProperty(EnterOTPProperty)]
-		public HotKeySettings EnterOTP
+		public EnterOTPSettings EnterOTP
 		{
-			get { return (HotKeySettings)base[EnterOTPProperty]; }
+			get { return (EnterOTPSettings)base[EnterOTPProperty]; }
 			set { base[EnterOTPProperty] = value; }
 		}
 

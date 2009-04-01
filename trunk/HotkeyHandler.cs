@@ -20,7 +20,7 @@ namespace Yubikey.TokenSimulator
 				RegisterHotKey(handler.Handle, handler._hookID, modifiers,
 					(int)key);
 			}
-			catch (Exception e)
+			catch
 			{
 				if (handler._hookID != 0)
 				{

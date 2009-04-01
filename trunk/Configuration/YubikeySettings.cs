@@ -28,17 +28,27 @@ namespace Yubikey.TokenSimulator.Configuration
 		}
 
 		[ConfigurationProperty(TokenIDProperty, IsKey = false, IsRequired = true)]
-		public string TokenID
+		private string _tokenID
 		{
 			get { return (string)base[TokenIDProperty]; }
 			set { base[TokenIDProperty] = value; }
 		}
+		public byte[] TokenID
+		{
+			get { return Convert.FromBase64String(_tokenID); }
+			set { _tokenID = Convert.ToBase64String(value); }
+		}
 
 		[ConfigurationProperty(SecretProperty, IsKey = false, IsRequired = true)]
-		public string Secret
+		private string _secret
 		{
 			get { return (string)base[SecretProperty]; }
 			set { base[SecretProperty] = value; }
+		}
+		public byte[] Secret
+		{
+			get { return Convert.FromBase64String(_secret); }
+			set { _secret = Convert.ToBase64String(value); }
 		}
 
 		[ConfigurationProperty(SessionCounterProperty, IsKey = false, IsRequired = true)]
@@ -49,17 +59,15 @@ namespace Yubikey.TokenSimulator.Configuration
 		}
 
 		[ConfigurationProperty(PrivateIDProperty, IsKey = false, IsRequired = true)]
-		public string PrivateID
+		private string _privateID
 		{
 			get { return (string)base[PrivateIDProperty]; }
 			set { base[PrivateIDProperty] = value; }
 		}
-
-		[ConfigurationProperty(KeyFormatProperty, IsKey = false, IsRequired = false, DefaultValue = KeyFormat.Base64)]
-		public KeyFormat KeyFormat
+		public byte[] PrivateID
 		{
-			get { return (KeyFormat)base[KeyFormatProperty]; }
-			set { base[KeyFormatProperty] = value; }
+			get { return Convert.FromBase64String(_privateID); }
+			set { _privateID = Convert.ToBase64String(value); }
 		}
 
 		[ConfigurationProperty(PressEnterProperty, IsRequired = false, DefaultValue = true)]
