@@ -122,6 +122,8 @@ namespace Yubikey.TokenSimulator
 
 		void _enterOTPHandler_OnHotKeyEvent(object sender, EventArgs e)
 		{
+			if (comboBox1.SelectedIndex < 0)
+				return;
 			YubikeySettings key = ((List<YubikeySettings>)comboBox1.DataSource)[comboBox1.SelectedIndex];
 			string otp = CreateOTP(key);
 			SendKeys.SendWait(otp);
@@ -231,6 +233,8 @@ namespace Yubikey.TokenSimulator
 
 		private void IncrementSession()
 		{
+			if (comboBox1.SelectedIndex < 0)
+				return;
 			System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 			YubikeysSection keysSection = (YubikeysSection)config.GetSection("tokens");
 			YubikeySettings key = keysSection.Keys[((YubikeySettings)comboBox1.SelectedItem).Name];
@@ -251,6 +255,8 @@ namespace Yubikey.TokenSimulator
 
 		private void btnCreateOTP_Click(object sender, EventArgs e)
 		{
+			if (comboBox1.SelectedIndex < 0)
+				return;
 			YubikeySettings key = ((List<YubikeySettings>)comboBox1.DataSource)[comboBox1.SelectedIndex];
 			string otp = CreateOTP(key);
 			Clipboard.SetData(DataFormats.StringFormat, otp);
