@@ -37,9 +37,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\EnterOTPSettings.cs" />
     <Compile Include="Configuration\HotkeySection.cs" />
     <Compile Include="Configuration\HotKeySettings.cs" />
-    <Compile Include="Configuration\KeyFormat.cs" />
     <Compile Include="Configuration\YubikeysCollection.cs" />
     <Compile Include="Configuration\YubikeySettings.cs" />
     <Compile Include="Configuration\YubikeysSection.cs" />
@@ -53,6 +53,12 @@
     <Compile Include="HotkeyHandler.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="KeyManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeyManagement.Designer.cs">
+      <DependentUpon>KeyManagement.cs</DependentUpon>
+    </Compile>
     <Compile Include="ModHex.cs" />
     <Compile Include="ModHexTable.cs" />
     <Compile Include="Program.cs" />
@@ -60,6 +66,10 @@
     <EmbeddedResource Include="Form1.resx">
       <SubType>Designer</SubType>
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeyManagement.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>KeyManagement.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -81,6 +91,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="StringEncoding.cs" />
+    <Compile Include="StringParsing.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

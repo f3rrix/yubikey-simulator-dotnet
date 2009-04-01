@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
@@ -21,47 +20,48 @@ namespace Yubikey.TokenSimulator
 		private const int MOD_SHIFT = 8;
 		private const int MOD_WIN = 8;
 
+		private EventHandler _indexChangedHandler;
+
 		private HotkeyHandler _enterOTPHandler;
 		private HotkeyHandler _incrementSessionHandler;
+		private int _enterKeyDelay = 100;
 
 		public Form1()
 		{
 			InitializeComponent();
+			_indexChangedHandler = new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+			this.comboBox1.SelectedIndexChanged += _indexChangedHandler;
 
-			System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-			YubikeysSection keysSection = (YubikeysSection)config.GetSection("tokens");
-			List<YubikeySettings> keys = new List<YubikeySettings>();
-			foreach (YubikeySettings key in keysSection.Keys)
-			{
-				switch (key.KeyFormat)
-				{
-					case KeyFormat.Hex:
-						key.Secret = Convert.ToBase64String(Hex.Decode(key.Secret));
-						key.PrivateID = Convert.ToBase64String(Hex.Decode(key.PrivateID));
-						key.TokenID = Convert.ToBase64String(Hex.Decode(key.TokenID));
-						key.KeyFormat = KeyFormat.Base64;
-						break;
-					case KeyFormat.ModHex:
-						key.Secret = Convert.ToBase64String(ModHex.Decode(key.Secret));
-						key.PrivateID = Convert.ToBase64String(ModHex.Decode(key.PrivateID));
-						key.TokenID = Convert.ToBase64String(ModHex.Decode(key.TokenID));
-						key.KeyFormat = KeyFormat.Base64;
-						break;
-				}
-				key.StartTime = DateTime.Now;
-				keys.Add(key);
-			}
-			config.Save(ConfigurationSaveMode.Modified);
-			ConfigurationManager.RefreshSection("tokens");
-
-			comboBox1.DataSource = keys;
-			comboBox1.ValueMember = "Name";
-			comboBox1.SelectedIndex = -1;
-			this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-
-			DateTime start = DateTime.Now;
+			PopulateKeyList();
 
 			RegisterHotkeys();
+		}
+
+		private void PopulateKeyList()
+		{
+			System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+			YubikeysSection keysSection = (YubikeysSection)config.GetSection("tokens");
+			lock (comboBox1)
+			{
+				this.comboBox1.SelectedIndexChanged -= _indexChangedHandler;
+				YubikeySettings selectedItem = (YubikeySettings)this.comboBox1.SelectedItem;
+				this.comboBox1.DataSource = null;
+				foreach (YubikeySettings key in keysSection.Keys)
+				{
+					key.StartTime = DateTime.Now;
+				}
+				this.comboBox1.DataSource = keysSection.Keys;
+				comboBox1.ValueMember = "Name";
+				comboBox1.DisplayMember = "Name";
+				if (selectedItem == null)
+					this.comboBox1.SelectedIndex = -1;
+				else
+				{
+					this.comboBox1.SelectedIndex = keysSection.Keys.IndexOf(selectedItem);
+				}
+				this.comboBox1.SelectedIndexChanged += _indexChangedHandler;
+			}
+			IncrementSession();
 		}
 
 		private void RegisterHotkeys()
@@ -79,6 +79,7 @@ namespace Yubikey.TokenSimulator
 						}
 						else
 						{
+							_enterKeyDelay = settings.EnterOTP.EnterKeyDelay;
 							_enterOTPHandler = HotkeyHandler.Create((Keys)Enum.Parse(typeof(Keys), settings.EnterOTP.Key, true),
 								(settings.EnterOTP.Alt ? MOD_ALT : 0) |
 								(settings.EnterOTP.Ctrl ? MOD_CONTROL : 0) |
@@ -124,13 +125,14 @@ namespace Yubikey.TokenSimulator
 		{
 			if (comboBox1.SelectedIndex < 0)
 				return;
-			YubikeySettings key = ((List<YubikeySettings>)comboBox1.DataSource)[comboBox1.SelectedIndex];
+			YubikeySettings key = ((YubikeysCollection)comboBox1.DataSource)[comboBox1.SelectedIndex];
 			string otp = CreateOTP(key);
 			SendKeys.SendWait(otp);
 			if (key.PressEnter)
 			{
-				Thread.Sleep(100);
-				SendKeys.SendWait("{ENTER}");
+				SendKeys.Flush();
+				Thread.Sleep(_enterKeyDelay);
+				SendKeys.Send("{ENTER}");
 			}
 		}
 
@@ -167,34 +169,13 @@ namespace Yubikey.TokenSimulator
 
 		private string CreateOTP(YubikeySettings key)
 		{
-			byte[] privateID = null;
-			byte[] aesKeyBytes = null;
-			string tokenID = "";
-			// Translate string encoded data to bytes
-			switch (key.KeyFormat)
-			{
-				case KeyFormat.Base64:
-					tokenID = ModHex.Encode(Convert.FromBase64String(key.TokenID));
-					privateID = Convert.FromBase64String(key.PrivateID);
-					aesKeyBytes = Convert.FromBase64String(key.Secret);
-					break;
-				case KeyFormat.Hex:
-					tokenID = ModHex.Encode(Hex.Decode(key.TokenID));
-					privateID = Hex.Decode(key.PrivateID);
-					aesKeyBytes = Hex.Decode(key.Secret);
-					break;
-				case KeyFormat.ModHex:
-					tokenID = key.TokenID;
-					privateID = ModHex.Decode(key.PrivateID);
-					aesKeyBytes = ModHex.Decode(key.Secret);
-					break;
-			}
+			string tokenID = ModHex.Encode(key.TokenID);
 
 			// Assemble key unencrypted data
 			byte[] keyBytes = new byte[16];
-			for (int i = 0; i < privateID.Length; ++i)
+			for (int i = 0; i < key.PrivateID.Length; ++i)
 			{
-				keyBytes[i] = privateID[i];
+				keyBytes[i] = key.PrivateID[i];
 			}
 			keyBytes[6] = (byte)(key.SessionCounter & 0xff);
 			keyBytes[7] = (byte)((key.SessionCounter >> 8) & 0xff);
@@ -219,7 +200,7 @@ namespace Yubikey.TokenSimulator
 				aes.Padding = PaddingMode.None;
 				aes.Mode = CipherMode.ECB;
 
-				using (ICryptoTransform xform = aes.CreateEncryptor(aesKeyBytes, new byte[16]))
+				using (ICryptoTransform xform = aes.CreateEncryptor(key.Secret, new byte[16]))
 				{
 					byte[] plainBytes = new byte[16];
 					xform.TransformBlock(keyBytes, 0, keyBytes.Length, plainBytes, 0);
@@ -248,7 +229,7 @@ namespace Yubikey.TokenSimulator
 			ConfigurationManager.RefreshSection("tokens");
 
 			int index = comboBox1.SelectedIndex;
-			List<YubikeySettings> keys = ((List<YubikeySettings>)comboBox1.DataSource);
+			YubikeysCollection keys = ((YubikeysCollection)comboBox1.DataSource);
 			keys[index] = key;
 			comboBox1.DataSource = keys;
 		}
@@ -257,7 +238,7 @@ namespace Yubikey.TokenSimulator
 		{
 			if (comboBox1.SelectedIndex < 0)
 				return;
-			YubikeySettings key = ((List<YubikeySettings>)comboBox1.DataSource)[comboBox1.SelectedIndex];
+			YubikeySettings key = ((YubikeysCollection)comboBox1.DataSource)[comboBox1.SelectedIndex];
 			string otp = CreateOTP(key);
 			Clipboard.SetData(DataFormats.StringFormat, otp);
 		}
@@ -269,7 +250,26 @@ namespace Yubikey.TokenSimulator
 
 		private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			btnIncrementSession_Click(sender, e);
+			IncrementSession();
+		}
+
+		private void manageKeysToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+			YubikeysSection keysSection = (YubikeysSection)config.GetSection("tokens");
+			new KeyManagement(keysSection.Keys).ShowDialog();
+			config.Save(ConfigurationSaveMode.Modified);
+			PopulateKeyList();
+		}
+
+		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			this.Close();
+		}
+
+		private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show("Sorry, you'll just have to tweak the config directly for now...");
 		}
 	}
 }

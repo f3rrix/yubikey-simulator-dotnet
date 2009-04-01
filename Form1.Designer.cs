@@ -52,12 +52,18 @@ namespace Yubikey.TokenSimulator
 			this.label3 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
+			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.manageKeysToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// comboBox1
 			// 
 			this.comboBox1.FormattingEnabled = true;
-			this.comboBox1.Location = new System.Drawing.Point(13, 13);
+			this.comboBox1.Location = new System.Drawing.Point(13, 38);
 			this.comboBox1.Name = "comboBox1";
 			this.comboBox1.Size = new System.Drawing.Size(121, 21);
 			this.comboBox1.TabIndex = 0;
@@ -75,7 +81,7 @@ namespace Yubikey.TokenSimulator
 			// txtOTP
 			// 
 			this.txtOTP.BackColor = System.Drawing.SystemColors.Window;
-			this.txtOTP.Location = new System.Drawing.Point(48, 159);
+			this.txtOTP.Location = new System.Drawing.Point(48, 184);
 			this.txtOTP.Name = "txtOTP";
 			this.txtOTP.ReadOnly = true;
 			this.txtOTP.Size = new System.Drawing.Size(232, 20);
@@ -84,7 +90,7 @@ namespace Yubikey.TokenSimulator
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(13, 162);
+			this.label1.Location = new System.Drawing.Point(13, 187);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(29, 13);
 			this.label1.TabIndex = 3;
@@ -103,7 +109,7 @@ namespace Yubikey.TokenSimulator
 			// txtSessionCounter
 			// 
 			this.txtSessionCounter.BackColor = System.Drawing.SystemColors.Window;
-			this.txtSessionCounter.Location = new System.Drawing.Point(99, 41);
+			this.txtSessionCounter.Location = new System.Drawing.Point(99, 66);
 			this.txtSessionCounter.Name = "txtSessionCounter";
 			this.txtSessionCounter.ReadOnly = true;
 			this.txtSessionCounter.Size = new System.Drawing.Size(100, 20);
@@ -112,7 +118,7 @@ namespace Yubikey.TokenSimulator
 			// txtUseCounter
 			// 
 			this.txtUseCounter.BackColor = System.Drawing.SystemColors.Window;
-			this.txtUseCounter.Location = new System.Drawing.Point(99, 68);
+			this.txtUseCounter.Location = new System.Drawing.Point(99, 93);
 			this.txtUseCounter.Name = "txtUseCounter";
 			this.txtUseCounter.ReadOnly = true;
 			this.txtUseCounter.Size = new System.Drawing.Size(100, 20);
@@ -121,7 +127,7 @@ namespace Yubikey.TokenSimulator
 			// txtTimestamp
 			// 
 			this.txtTimestamp.BackColor = System.Drawing.SystemColors.Window;
-			this.txtTimestamp.Location = new System.Drawing.Point(99, 95);
+			this.txtTimestamp.Location = new System.Drawing.Point(99, 120);
 			this.txtTimestamp.Name = "txtTimestamp";
 			this.txtTimestamp.ReadOnly = true;
 			this.txtTimestamp.Size = new System.Drawing.Size(100, 20);
@@ -130,7 +136,7 @@ namespace Yubikey.TokenSimulator
 			// txtRandom
 			// 
 			this.txtRandom.BackColor = System.Drawing.SystemColors.Window;
-			this.txtRandom.Location = new System.Drawing.Point(99, 122);
+			this.txtRandom.Location = new System.Drawing.Point(99, 147);
 			this.txtRandom.Name = "txtRandom";
 			this.txtRandom.ReadOnly = true;
 			this.txtRandom.Size = new System.Drawing.Size(100, 20);
@@ -139,7 +145,7 @@ namespace Yubikey.TokenSimulator
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(13, 44);
+			this.label2.Location = new System.Drawing.Point(13, 69);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(84, 13);
 			this.label2.TabIndex = 10;
@@ -148,7 +154,7 @@ namespace Yubikey.TokenSimulator
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(13, 71);
+			this.label3.Location = new System.Drawing.Point(13, 96);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(66, 13);
 			this.label3.TabIndex = 11;
@@ -157,7 +163,7 @@ namespace Yubikey.TokenSimulator
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(13, 98);
+			this.label4.Location = new System.Drawing.Point(13, 123);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(58, 13);
 			this.label4.TabIndex = 12;
@@ -166,11 +172,52 @@ namespace Yubikey.TokenSimulator
 			// label5
 			// 
 			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(13, 125);
+			this.label5.Location = new System.Drawing.Point(13, 150);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(47, 13);
 			this.label5.TabIndex = 13;
 			this.label5.Text = "Random";
+			// 
+			// menuStrip1
+			// 
+			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem});
+			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+			this.menuStrip1.Name = "menuStrip1";
+			this.menuStrip1.Size = new System.Drawing.Size(292, 24);
+			this.menuStrip1.TabIndex = 14;
+			this.menuStrip1.Text = "menuStrip1";
+			// 
+			// fileToolStripMenuItem
+			// 
+			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.manageKeysToolStripMenuItem,
+            this.optionsToolStripMenuItem,
+            this.exitToolStripMenuItem});
+			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+			this.fileToolStripMenuItem.Size = new System.Drawing.Size(45, 20);
+			this.fileToolStripMenuItem.Text = "&Menu";
+			// 
+			// manageKeysToolStripMenuItem
+			// 
+			this.manageKeysToolStripMenuItem.Name = "manageKeysToolStripMenuItem";
+			this.manageKeysToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+			this.manageKeysToolStripMenuItem.Text = "&Manage Keys...";
+			this.manageKeysToolStripMenuItem.Click += new System.EventHandler(this.manageKeysToolStripMenuItem_Click);
+			// 
+			// exitToolStripMenuItem
+			// 
+			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.exitToolStripMenuItem.Text = "E&xit";
+			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+			// 
+			// optionsToolStripMenuItem
+			// 
+			this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+			this.optionsToolStripMenuItem.Text = "&Options...";
+			this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
 			// 
 			// Form1
 			// 
@@ -190,8 +237,12 @@ namespace Yubikey.TokenSimulator
 			this.Controls.Add(this.txtOTP);
 			this.Controls.Add(this.btnCreateOTP);
 			this.Controls.Add(this.comboBox1);
+			this.Controls.Add(this.menuStrip1);
+			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "Form1";
-			this.Text = "Form1";
+			this.Text = "Yubikey.TokenSimulator";
+			this.menuStrip1.ResumeLayout(false);
+			this.menuStrip1.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -212,6 +263,11 @@ namespace Yubikey.TokenSimulator
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.MenuStrip menuStrip1;
+		private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem manageKeysToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
 	}
 }
 
