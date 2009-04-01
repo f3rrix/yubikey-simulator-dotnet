@@ -1,7 +1,7 @@
-Build project, or extract binary.
+Build project, or extract zip.
 
-Add keys to config. (Included keys were generated from GRC's [http://www.grc.com/pass/ Perfect Passwords Page], not taken from actual Yubikeys, that I know of...) As demonstrated in the included config, the aes secret, and IDs can be specified as Base64, Hex, or Modhex (must all be the same format for any one key, and will be implicitly converted into Base64 on next run).
+Configure hotkey settings in config. (No UI yet...)
 
-Configure hotkey settings in config.
+Either launch the application and add keys by using the UI (Menu -> Manage Keys), or add to config file by hand. As demonstrated in the included config, the aes secret and public/private IDs are stored as Base64. (Included key(s) were generated from GRC's [http://www.grc.com/pass/ Perfect Passwords Page], not taken from actual Yubikeys, that I know of...)
 
 Launch application, select desired key from dropdown (will be treated as inserting the key, i.e. session counter will increment, and use counter and timestamp will reset), then either click the button to generate an OTP (will be copied to clipboard automatically), or position your cursor where you want the OTP to be entered, and press the hotkey.
