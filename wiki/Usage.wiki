@@ -1,6 +1,6 @@
 Build project, or extract binary.
 
-Add keys to config. (Included keys were generated from GRC's [http://www.grc.com/pass/ Perfect Passwords Page], not taken from actual Yubikeys, that I know of...) As demonstrated in the included config, the aes secret, and IDs can be specified as Base64, Hex, or ModHex (must all be the same format for any one key, and will be implicitly converted into Base64 on next run).
+Add keys to config. (Included keys were generated from GRC's [http://www.grc.com/pass/ Perfect Passwords Page], not taken from actual Yubikeys, that I know of...) As demonstrated in the included config, the aes secret, and IDs can be specified as Base64, Hex, or Modhex (must all be the same format for any one key, and will be implicitly converted into Base64 on next run).
 
 Configure hotkey settings in config.
 
