@@ -14,7 +14,7 @@ namespace Yubikey.TokenSimulator
 {
 	public partial class Form1 : Form
 	{
-		private const double TS_SEC = 0.119;
+		private const double TS_SEC = 0.125;
 		private const int MOD_ALT = 1;
 		private const int MOD_CONTROL = 2;
 		private const int MOD_SHIFT = 8;
