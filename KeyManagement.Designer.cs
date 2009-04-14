@@ -335,6 +335,7 @@ namespace Yubikey.TokenSimulator
 			this.Controls.Add(this.btnAddKey);
 			this.Controls.Add(this.btnDeleteKey);
 			this.Controls.Add(this.dataGridView1);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Name = "KeyManagement";
 			this.Text = "Key Management";
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
