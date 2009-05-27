@@ -20,14 +20,12 @@ namespace Yubikey.TokenSimulator
 
 			cbEnterOTP.Checked = _settings.EnterOTP.Enabled;
 			cboEnterOTPKey.SelectedItem = _settings.EnterOTP.Key.ToUpper();
-			cbEnterOTPShift.Checked = _settings.EnterOTP.Shift;
 			cbEnterOTPCtrl.Checked = _settings.EnterOTP.Ctrl;
 			cbEnterOTPAlt.Checked = _settings.EnterOTP.Alt;
 			cbEnterOTPWin.Checked = _settings.EnterOTP.Win;
 			txtEnterOTPEnterKeyDelay.Text = _settings.EnterOTP.EnterKeyDelay.ToString();
 			cbIncrementSession.Checked = _settings.IncrementSession.Enabled;
 			cboIncrementSessionKey.SelectedItem = _settings.IncrementSession.Key.ToUpper();
-			cbIncrementSessionShift.Checked = _settings.IncrementSession.Shift;
 			cbIncrementSessionCtrl.Checked = _settings.IncrementSession.Ctrl;
 			cbIncrementSessionAlt.Checked = _settings.IncrementSession.Alt;
 			cbIncrementSessionWin.Checked = _settings.IncrementSession.Win;
@@ -53,11 +51,6 @@ namespace Yubikey.TokenSimulator
 		private void cbEnterOTPAlt_CheckedChanged(object sender, EventArgs e)
 		{
 			_settings.EnterOTP.Alt = cbEnterOTPAlt.Checked;
-		}
-
-		private void cbEnterOTPShift_CheckedChanged(object sender, EventArgs e)
-		{
-			_settings.EnterOTP.Shift = cbEnterOTPShift.Checked;
 		}
 
 		private void cbEnterOTPWin_CheckedChanged(object sender, EventArgs e)
@@ -99,11 +92,6 @@ namespace Yubikey.TokenSimulator
 		private void cbIncrementSessionAlt_CheckedChanged(object sender, EventArgs e)
 		{
 			_settings.IncrementSession.Alt = cbIncrementSessionAlt.Checked;
-		}
-
-		private void cbIncrementSessionShift_CheckedChanged(object sender, EventArgs e)
-		{
-			_settings.IncrementSession.Shift = cbIncrementSessionShift.Checked;
 		}
 
 		private void cbIncrementSessionWin_CheckedChanged(object sender, EventArgs e)

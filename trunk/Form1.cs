@@ -89,7 +89,6 @@ namespace Yubikey.TokenSimulator
 							_enterOTPHandler = HotkeyHandler.Create((Keys)Enum.Parse(typeof(Keys), settings.EnterOTP.Key, true),
 								(settings.EnterOTP.Alt ? MOD_ALT : 0) |
 								(settings.EnterOTP.Ctrl ? MOD_CONTROL : 0) |
-								(settings.EnterOTP.Shift ? MOD_SHIFT : 0) |
 								(settings.EnterOTP.Win ? MOD_WIN : 0));
 							_enterOTPHandler.OnHotKeyEvent += new HotkeyHandler.HotKeyEventHandler(_enterOTPHandler_OnHotKeyEvent);
 						}
@@ -118,7 +117,6 @@ namespace Yubikey.TokenSimulator
 							_incrementSessionHandler = HotkeyHandler.Create((Keys)Enum.Parse(typeof(Keys), settings.IncrementSession.Key, true),
 								(settings.IncrementSession.Alt ? MOD_ALT : 0) |
 								(settings.IncrementSession.Ctrl ? MOD_CONTROL : 0) |
-								(settings.IncrementSession.Shift ? MOD_SHIFT : 0) |
 								(settings.IncrementSession.Win ? MOD_WIN : 0));
 							_incrementSessionHandler.OnHotKeyEvent += new HotkeyHandler.HotKeyEventHandler(_incrementSessionHandler_OnHotKeyEvent);
 						}

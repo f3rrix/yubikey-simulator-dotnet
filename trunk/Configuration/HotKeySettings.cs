@@ -11,7 +11,6 @@ namespace Yubikey.TokenSimulator.Configuration
 		private const string KeyProperty = "key";
 		private const string AltProperty = "alt";
 		private const string CtrlProperty = "ctrl";
-		private const string ShiftProperty = "shift";
 		private const string WinProperty = "winKey";
 
 		public override bool IsReadOnly()
@@ -45,13 +44,6 @@ namespace Yubikey.TokenSimulator.Configuration
 		{
 			get { return (bool)base[CtrlProperty]; }
 			set { base[CtrlProperty] = value; }
-		}
-
-		[ConfigurationProperty(ShiftProperty, DefaultValue = false)]
-		public bool Shift
-		{
-			get { return (bool)base[ShiftProperty]; }
-			set { base[ShiftProperty] = value; }
 		}
 
 		[ConfigurationProperty(WinProperty, DefaultValue = false)]
