@@ -65,27 +65,5 @@ namespace Yubikey.TokenSimulator
 		private static extern short GlobalAddAtom(string lpString);
 		[DllImport("kernel32", SetLastError = true)]
 		private static extern short GlobalDeleteAtom(short nAtom);
-
-		/*
-		static class APIFuncs
-		{
-			public static int SetHotKey(IntPtr hwnd, int id, int fsModifiers, int vk)
-			{
-				return RegisterHotKey(hwnd, id, fsModifiers, vk);
-			}
-			public static int UnsetHotKey(IntPtr hwnd, int id)
-			{
-				return UnregisterHotKey(hwnd, id);
-			}
-			public static short AddAtom(string lpString)
-			{
-				return GlobalAddAtom(lpString);
-			}
-			public static short DeleteAtom(short nAtom)
-			{
-				return GlobalDeleteAtom(nAtom);
-			}
-		}
-		*/
 	}
 }

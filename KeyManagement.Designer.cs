@@ -78,8 +78,8 @@ namespace Yubikey.TokenSimulator
 			this.dataGridView1.Name = "dataGridView1";
 			this.dataGridView1.Size = new System.Drawing.Size(656, 271);
 			this.dataGridView1.TabIndex = 1;
-			this.dataGridView1.CellParsing += new System.Windows.Forms.DataGridViewCellParsingEventHandler(this.dataGridView1_CellParsing);
 			this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
+			this.dataGridView1.CellParsing += new System.Windows.Forms.DataGridViewCellParsingEventHandler(this.dataGridView1_CellParsing);
 			// 
 			// dgColName
 			// 
@@ -335,7 +335,9 @@ namespace Yubikey.TokenSimulator
 			this.Controls.Add(this.btnAddKey);
 			this.Controls.Add(this.btnDeleteKey);
 			this.Controls.Add(this.dataGridView1);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
 			this.Name = "KeyManagement";
 			this.Text = "Key Management";
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();

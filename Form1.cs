@@ -17,7 +17,7 @@ namespace Yubikey.TokenSimulator
 		private const double TS_SEC = 0.125;
 		private const int MOD_ALT = 1;
 		private const int MOD_CONTROL = 2;
-		private const int MOD_SHIFT = 8;
+		private const int MOD_SHIFT = 4;
 		private const int MOD_WIN = 8;
 
 		private EventHandler _indexChangedHandler;
@@ -66,9 +66,15 @@ namespace Yubikey.TokenSimulator
 
 		private void RegisterHotkeys()
 		{
-			HotkeySection settings = (HotkeySection)ConfigurationManager.GetSection("hotkeys");
+			System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+			SettingsSection settings = (SettingsSection)config.GetSection("settings");
 			if (settings != null)
 			{
+				if (_enterOTPHandler != null)
+				{
+					_enterOTPHandler.Dispose();
+					_enterOTPHandler = null;
+				}
 				if (settings.EnterOTP.Enabled)
 				{
 					try
@@ -93,6 +99,11 @@ namespace Yubikey.TokenSimulator
 						_enterOTPHandler = null;
 						MessageBox.Show("Failed registering Enter OTP hotkey.\r\n" + e.Message);
 					}
+				}
+				if (_incrementSessionHandler != null)
+				{
+					_incrementSessionHandler.Dispose();
+					_incrementSessionHandler = null;
 				}
 				if (settings.IncrementSession.Enabled)
 				{
@@ -186,8 +197,8 @@ namespace Yubikey.TokenSimulator
 			keyBytes[8] = (byte)(timer & 0xff);
 			keyBytes[9] = (byte)((timer >> 8) & 0xff);
 			keyBytes[10] = (byte)((timer >> 16) & 0xff);
-			keyBytes[11] = ++key.UseCounter;
-			txtUseCounter.Text = key.UseCounter.ToString();
+			keyBytes[11] = key.UseCounter++;
+			txtUseCounter.Text = keyBytes[11].ToString();
 			byte[] buffer = new byte[2];
 			System.Security.Cryptography.RNGCryptoServiceProvider.Create().GetBytes(buffer);
 			txtRandom.Text = (((int)buffer[1] << 8) + (int)buffer[0]).ToString();
@@ -269,7 +280,14 @@ namespace Yubikey.TokenSimulator
 
 		private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show("Sorry, you'll just have to tweak the config directly for now...");
+			System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+			SettingsSection settings = (SettingsSection)config.GetSection("settings");
+			DialogResult result = new Settings(settings).ShowDialog();
+			if (result == DialogResult.OK)
+			{
+				config.Save(ConfigurationSaveMode.Modified);
+				RegisterHotkeys();
+			}
 		}
 	}
 }

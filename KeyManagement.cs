@@ -26,6 +26,7 @@ namespace Yubikey.TokenSimulator
 			this.cboAddKeyFormat.SelectedIndex = 0;
 			this.cbPressEnter.Checked = true;
 			this.panel1.Enabled = false;
+			this.panel1.Visible = false;
 
 			this.dataGridView1.DataSource = keys;
 		}
@@ -58,7 +59,8 @@ namespace Yubikey.TokenSimulator
 		private void btnAddKey_Click(object sender, EventArgs e)
 		{
 			btnAddKey.Enabled = false;
-			panel1.Enabled = true;
+			this.panel1.Enabled = true;
+			this.panel1.Visible = true;
 			this.Width = _expandedWidth;
 			txtName.Clear();
 			txtSecret.Clear();
@@ -178,6 +180,7 @@ namespace Yubikey.TokenSimulator
 		{
 			this.Width = _contractedWidth;
 			this.panel1.Enabled = false;
+			this.panel1.Visible = false;
 			btnAddKey.Enabled = true;
 		}
 	}

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Yubikey.TokenSimulator.Configuration
 {
-	public class HotkeySection : ConfigurationSection
+	public class SettingsSection : ConfigurationSection
 	{
 		private const string EnterOTPProperty = "enterOTP";
 		private const string IncrementSessionProperty = "incrementSession";
