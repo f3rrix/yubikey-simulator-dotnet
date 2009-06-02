@@ -24,11 +24,16 @@ namespace Yubikey.TokenSimulator
 			cbEnterOTPAlt.Checked = _settings.EnterOTP.Alt;
 			cbEnterOTPWin.Checked = _settings.EnterOTP.Win;
 			txtEnterOTPEnterKeyDelay.Text = _settings.EnterOTP.EnterKeyDelay.ToString();
+
 			cbIncrementSession.Checked = _settings.IncrementSession.Enabled;
 			cboIncrementSessionKey.SelectedItem = _settings.IncrementSession.Key.ToUpper();
 			cbIncrementSessionCtrl.Checked = _settings.IncrementSession.Ctrl;
 			cbIncrementSessionAlt.Checked = _settings.IncrementSession.Alt;
 			cbIncrementSessionWin.Checked = _settings.IncrementSession.Win;
+
+			cbMinimizeToSysTray.Checked = _settings.MinimizeToSysTray;
+			cbStartMinimized.Enabled = _settings.MinimizeToSysTray;
+			cbStartMinimized.Checked = _settings.StartMinimized;
 		}
 
 		private void cbEnterOTP_CheckedChanged(object sender, EventArgs e)
@@ -105,9 +110,15 @@ namespace Yubikey.TokenSimulator
 			this.Close();
 		}
 
-		private void btnCancel_Click(object sender, EventArgs e)
+		private void cbMinimizeToSysTray_CheckedChanged(object sender, EventArgs e)
 		{
+			_settings.MinimizeToSysTray = cbMinimizeToSysTray.Checked;
+			cbStartMinimized.Enabled = cbMinimizeToSysTray.Checked;
+		}
 
+		private void cbStartMinimized_CheckedChanged(object sender, EventArgs e)
+		{
+			_settings.StartMinimized = cbStartMinimized.Checked;
 		}
 	}
 }

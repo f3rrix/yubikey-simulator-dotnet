@@ -45,6 +45,8 @@ namespace Yubikey.TokenSimulator
 			this.cboEnterOTPKey = new System.Windows.Forms.ComboBox();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.btnSave = new System.Windows.Forms.Button();
+			this.cbMinimizeToSysTray = new System.Windows.Forms.CheckBox();
+			this.cbStartMinimized = new System.Windows.Forms.CheckBox();
 			this.gbHotkeys.SuspendLayout();
 			this.pnlIncrementSession.SuspendLayout();
 			this.pnlEnterOTP.SuspendLayout();
@@ -277,7 +279,6 @@ namespace Yubikey.TokenSimulator
 			this.btnCancel.TabIndex = 1;
 			this.btnCancel.Text = "Cancel";
 			this.btnCancel.UseVisualStyleBackColor = true;
-			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
 			// btnSave
 			// 
@@ -289,6 +290,28 @@ namespace Yubikey.TokenSimulator
 			this.btnSave.UseVisualStyleBackColor = true;
 			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
 			// 
+			// cbMinimizeToSysTray
+			// 
+			this.cbMinimizeToSysTray.AutoSize = true;
+			this.cbMinimizeToSysTray.Location = new System.Drawing.Point(20, 152);
+			this.cbMinimizeToSysTray.Name = "cbMinimizeToSysTray";
+			this.cbMinimizeToSysTray.Size = new System.Drawing.Size(139, 17);
+			this.cbMinimizeToSysTray.TabIndex = 3;
+			this.cbMinimizeToSysTray.Text = "Minimize to System Tray";
+			this.cbMinimizeToSysTray.UseVisualStyleBackColor = true;
+			this.cbMinimizeToSysTray.CheckedChanged += new System.EventHandler(this.cbMinimizeToSysTray_CheckedChanged);
+			// 
+			// cbStartMinimized
+			// 
+			this.cbStartMinimized.AutoSize = true;
+			this.cbStartMinimized.Location = new System.Drawing.Point(38, 175);
+			this.cbStartMinimized.Name = "cbStartMinimized";
+			this.cbStartMinimized.Size = new System.Drawing.Size(97, 17);
+			this.cbStartMinimized.TabIndex = 4;
+			this.cbStartMinimized.Text = "Start Minimized";
+			this.cbStartMinimized.UseVisualStyleBackColor = true;
+			this.cbStartMinimized.CheckedChanged += new System.EventHandler(this.cbStartMinimized_CheckedChanged);
+			// 
 			// Settings
 			// 
 			this.AcceptButton = this.btnSave;
@@ -297,6 +320,8 @@ namespace Yubikey.TokenSimulator
 			this.CancelButton = this.btnCancel;
 			this.ClientSize = new System.Drawing.Size(362, 273);
 			this.ControlBox = false;
+			this.Controls.Add(this.cbStartMinimized);
+			this.Controls.Add(this.cbMinimizeToSysTray);
 			this.Controls.Add(this.btnSave);
 			this.Controls.Add(this.btnCancel);
 			this.Controls.Add(this.gbHotkeys);
@@ -304,7 +329,9 @@ namespace Yubikey.TokenSimulator
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "Settings";
-			this.Text = "Settings";
+			this.ShowIcon = false;
+			this.ShowInTaskbar = false;
+			this.Text = "Yubikey Token Simulator - Settings";
 			this.gbHotkeys.ResumeLayout(false);
 			this.gbHotkeys.PerformLayout();
 			this.pnlIncrementSession.ResumeLayout(false);
@@ -312,6 +339,7 @@ namespace Yubikey.TokenSimulator
 			this.pnlEnterOTP.ResumeLayout(false);
 			this.pnlEnterOTP.PerformLayout();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -334,5 +362,7 @@ namespace Yubikey.TokenSimulator
 		private System.Windows.Forms.CheckBox cbIncrementSessionAlt;
 		private System.Windows.Forms.CheckBox cbIncrementSessionCtrl;
 		private System.Windows.Forms.ComboBox cboIncrementSessionKey;
+		private System.Windows.Forms.CheckBox cbMinimizeToSysTray;
+		private System.Windows.Forms.CheckBox cbStartMinimized;
 	}
 }

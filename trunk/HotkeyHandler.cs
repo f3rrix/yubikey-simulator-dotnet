@@ -11,14 +11,13 @@ namespace Yubikey.TokenSimulator
 	{
 		private short _hookID = 0;
 
-		public static HotkeyHandler Create(Keys key, int modifiers)
+		public static HotkeyHandler Create(Keys key, int modifiers, HotKeyEventHandler eventHandler)
 		{
 			HotkeyHandler handler = new HotkeyHandler();
 			try
 			{
 				handler._hookID = GlobalAddAtom(Thread.CurrentThread.ManagedThreadId.ToString("X8") + handler.Name);
-				RegisterHotKey(handler.Handle, handler._hookID, modifiers,
-					(int)key);
+				RegisterHotKey(handler.Handle, handler._hookID, modifiers, (int)key);
 			}
 			catch
 			{
@@ -28,6 +27,7 @@ namespace Yubikey.TokenSimulator
 				}
 				return null;
 			}
+			handler.OnHotKeyEvent += eventHandler;
 			return handler;
 		}
 

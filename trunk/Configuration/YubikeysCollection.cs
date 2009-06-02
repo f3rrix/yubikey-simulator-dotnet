@@ -13,6 +13,11 @@ namespace Yubikey.TokenSimulator.Configuration
 			return ((YubikeySettings)element).Name;
 		}
 
+		public object[] GetAll()
+		{
+			return BaseGetAllKeys();
+		}
+
 		protected override ConfigurationElement CreateNewElement()
 		{
 			YubikeySettings _settings = new YubikeySettings();
