@@ -14,60 +14,104 @@ namespace Yubikey.TokenSimulator
 {
 	public partial class Form1 : Form
 	{
-		private const double TS_SEC = 0.125;
+		#region Constants
 		private const int MOD_ALT = 1;
 		private const int MOD_CONTROL = 2;
 		private const int MOD_SHIFT = 4;
 		private const int MOD_WIN = 8;
+		#endregion
 
+		#region Private Members
 		private EventHandler _indexChangedHandler;
+		private EventHandler _contextMenuIndexChangedHandler;
 
 		private HotkeyHandler _enterOTPHandler;
+		private HotkeyHandler.HotKeyEventHandler _enterOTPEvent_HotKeyEventHandler;
 		private HotkeyHandler _incrementSessionHandler;
+		private HotkeyHandler.HotKeyEventHandler _incrementSessionEvent_HotKeyEventHandler;
 		private int _enterKeyDelay = 100;
+		#endregion
 
+		#region Constructor
 		public Form1()
 		{
 			InitializeComponent();
 			_indexChangedHandler = new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-			this.comboBox1.SelectedIndexChanged += _indexChangedHandler;
+			_contextMenuIndexChangedHandler = new EventHandler(this.cmcboKeys_SelectedIndexChanged);
+			this.cboKeys.SelectedIndexChanged += _indexChangedHandler;
+			this.cmcboKeys.SelectedIndexChanged += _contextMenuIndexChangedHandler;
+
+			_enterOTPEvent_HotKeyEventHandler = new HotkeyHandler.HotKeyEventHandler(_enterOTPHandler_OnHotKeyEvent);
+			_incrementSessionEvent_HotKeyEventHandler = new HotkeyHandler.HotKeyEventHandler(_incrementSessionHandler_OnHotKeyEvent);
 
 			PopulateKeyList();
 
 			RegisterHotkeys();
 		}
+		#endregion
 
+		#region Properties
+		internal string SessionCounter
+		{
+			set { txtSessionCounter.Text = value; }
+		}
+
+		internal string Timestamp
+		{
+			set { txtTimestamp.Text = value; }
+		}
+
+		internal string UseCounter
+		{
+			set { txtUseCounter.Text = value; }
+		}
+
+		internal string Random
+		{
+			set { txtRandom.Text = value; }
+		}
+		#endregion
+
+		#region Methods
 		private void PopulateKeyList()
 		{
 			System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 			YubikeysSection keysSection = (YubikeysSection)config.GetSection("tokens");
-			lock (comboBox1)
+			lock (cboKeys)
 			{
-				this.comboBox1.SelectedIndexChanged -= _indexChangedHandler;
-				YubikeySettings selectedItem = (YubikeySettings)this.comboBox1.SelectedItem;
-				this.comboBox1.DataSource = null;
+				this.cboKeys.SelectedIndexChanged -= _indexChangedHandler;
+				this.cmcboKeys.SelectedIndexChanged -= _contextMenuIndexChangedHandler;
+				YubikeySettings selectedItem = (YubikeySettings)this.cboKeys.SelectedItem;
+				this.cboKeys.DataSource = null;
 				foreach (YubikeySettings key in keysSection.Keys)
 				{
 					key.StartTime = DateTime.Now;
 				}
-				this.comboBox1.DataSource = keysSection.Keys;
-				comboBox1.ValueMember = "Name";
-				comboBox1.DisplayMember = "Name";
+
+				this.cmcboKeys.Items.AddRange(keysSection.Keys.GetAll());
+				this.cboKeys.DataSource = keysSection.Keys;
+				this.cboKeys.ValueMember = "Name";
+				this.cboKeys.DisplayMember = "Name";
 				if (selectedItem == null)
-					this.comboBox1.SelectedIndex = -1;
+				{
+					this.cboKeys.SelectedIndex = -1;
+					this.cmcboKeys.SelectedIndex = -1;
+				}
 				else
 				{
-					this.comboBox1.SelectedIndex = keysSection.Keys.IndexOf(selectedItem);
+					int selectedIndex = keysSection.Keys.IndexOf(selectedItem);
+					this.cboKeys.SelectedIndex = selectedIndex;
+					this.cmcboKeys.SelectedIndex = selectedIndex;
 				}
-				this.comboBox1.SelectedIndexChanged += _indexChangedHandler;
+				this.cboKeys.SelectedIndexChanged += _indexChangedHandler;
+				this.cmcboKeys.SelectedIndexChanged += _contextMenuIndexChangedHandler;
 			}
 			IncrementSession();
 		}
 
 		private void RegisterHotkeys()
 		{
-			System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-			SettingsSection settings = (SettingsSection)config.GetSection("settings");
+			SettingsSection settings = (SettingsSection)ConfigurationManager.GetSection("settings");
 			if (settings != null)
 			{
 				if (_enterOTPHandler != null)
@@ -89,8 +133,8 @@ namespace Yubikey.TokenSimulator
 							_enterOTPHandler = HotkeyHandler.Create((Keys)Enum.Parse(typeof(Keys), settings.EnterOTP.Key, true),
 								(settings.EnterOTP.Alt ? MOD_ALT : 0) |
 								(settings.EnterOTP.Ctrl ? MOD_CONTROL : 0) |
-								(settings.EnterOTP.Win ? MOD_WIN : 0));
-							_enterOTPHandler.OnHotKeyEvent += new HotkeyHandler.HotKeyEventHandler(_enterOTPHandler_OnHotKeyEvent);
+								(settings.EnterOTP.Win ? MOD_WIN : 0),
+								_enterOTPEvent_HotKeyEventHandler);
 						}
 					}
 					catch (Exception e)
@@ -117,8 +161,8 @@ namespace Yubikey.TokenSimulator
 							_incrementSessionHandler = HotkeyHandler.Create((Keys)Enum.Parse(typeof(Keys), settings.IncrementSession.Key, true),
 								(settings.IncrementSession.Alt ? MOD_ALT : 0) |
 								(settings.IncrementSession.Ctrl ? MOD_CONTROL : 0) |
-								(settings.IncrementSession.Win ? MOD_WIN : 0));
-							_incrementSessionHandler.OnHotKeyEvent += new HotkeyHandler.HotKeyEventHandler(_incrementSessionHandler_OnHotKeyEvent);
+								(settings.IncrementSession.Win ? MOD_WIN : 0),
+								_incrementSessionEvent_HotKeyEventHandler);
 						}
 					}
 					catch (Exception e)
@@ -130,12 +174,57 @@ namespace Yubikey.TokenSimulator
 			}
 		}
 
+		private void IncrementSession()
+		{
+			if (cboKeys.SelectedIndex < 0)
+				return;
+			System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+			YubikeysSection keysSection = (YubikeysSection)config.GetSection("tokens");
+			YubikeySettings key = keysSection.Keys[((YubikeySettings)cboKeys.SelectedItem).Name];
+			++key.SessionCounter;
+			key.UseCounter = 0;
+			key.StartTime = DateTime.Now;
+			byte[] buffer = new byte[3];
+			RNGCryptoServiceProvider.Create().GetBytes(buffer);
+			key.TimeStamp = (((int)buffer[0]) << 16) | (((int)buffer[1]) << 8) | (int)buffer[2];
+			config.Save(ConfigurationSaveMode.Modified);
+			ConfigurationManager.RefreshSection("tokens");
+
+			int index = cboKeys.SelectedIndex;
+			YubikeysCollection keys = ((YubikeysCollection)cboKeys.DataSource);
+			keys[index] = key;
+			cboKeys.DataSource = keys;
+		}
+		#endregion
+
+		protected override void OnShown(EventArgs e)
+		{
+			base.OnShown(e);
+
+			SettingsSection settings = (SettingsSection)ConfigurationManager.GetSection("settings");
+			if (settings.MinimizeToSysTray && settings.StartMinimized)
+			{
+				this.WindowState = FormWindowState.Minimized;
+			}
+		}
+
+		private void Form1_Resize(object sender, System.EventArgs e)
+		{
+			SettingsSection settings = (SettingsSection)ConfigurationManager.GetSection("settings");
+			if (this.WindowState == FormWindowState.Minimized && settings.MinimizeToSysTray)
+			{
+				this.Hide();
+				notifyIcon1.Visible = true;
+			}
+		}
+
 		void _enterOTPHandler_OnHotKeyEvent(object sender, EventArgs e)
 		{
-			if (comboBox1.SelectedIndex < 0)
+			if (cboKeys.SelectedIndex < 0)
 				return;
-			YubikeySettings key = ((YubikeysCollection)comboBox1.DataSource)[comboBox1.SelectedIndex];
-			string otp = CreateOTP(key);
+			YubikeySettings key = ((YubikeysCollection)cboKeys.DataSource)[cboKeys.SelectedIndex];
+			string otp = OTPCreator.CreateOTP(key, this);
+			txtOTP.Text = otp;
 			SendKeys.SendWait(otp);
 			if (key.PressEnter)
 			{
@@ -150,105 +239,13 @@ namespace Yubikey.TokenSimulator
 			IncrementSession();
 		}
 
-		/// <summary>
-		/// Calculates the 2 byte CRC of the first 14 bytes of the input, and enters it into the 15th and 16th bytes
-		/// </summary>
-		/// <param name="buffer">16-byte array to be CRC'd</param>
-		private void CRC(byte[] buffer)
-		{
-			if (buffer.Length < 16)
-			{
-				MessageBox.Show("Invalid buffer, cannot calculate CRC");
-				return;
-			}
-			ushort crc = 0x5af0;
-			for (int bpos = 0; bpos < 14; ++bpos)
-			{
-				crc ^= buffer[bpos];
-				for (int i = 0; i < 8; ++i)
-				{
-					int j = crc & 1;
-					crc >>= 1;
-					if (j != 0) crc ^= 0x8408;
-				}
-			}
-			buffer[14] = (byte)(crc & 0xff);
-			buffer[15] = (byte)((crc >> 8) & 0xff);
-		}
-
-		private string CreateOTP(YubikeySettings key)
-		{
-			string tokenID = ModHex.Encode(key.TokenID);
-
-			// Assemble key unencrypted data
-			byte[] keyBytes = new byte[16];
-			for (int i = 0; i < key.PrivateID.Length; ++i)
-			{
-				keyBytes[i] = key.PrivateID[i];
-			}
-			keyBytes[6] = (byte)(key.SessionCounter & 0xff);
-			keyBytes[7] = (byte)((key.SessionCounter >> 8) & 0xff);
-			txtSessionCounter.Text = key.SessionCounter.ToString();
-			TimeSpan diff = DateTime.Now - key.StartTime;
-			int timer = (int)((((uint)(diff.TotalSeconds / TS_SEC) & 0x00FFFFFF) + key.TimeStamp) & 0x00FFFFFF);
-			txtTimestamp.Text = timer.ToString();
-			keyBytes[8] = (byte)(timer & 0xff);
-			keyBytes[9] = (byte)((timer >> 8) & 0xff);
-			keyBytes[10] = (byte)((timer >> 16) & 0xff);
-			keyBytes[11] = key.UseCounter++;
-			txtUseCounter.Text = keyBytes[11].ToString();
-			byte[] buffer = new byte[2];
-			System.Security.Cryptography.RNGCryptoServiceProvider.Create().GetBytes(buffer);
-			txtRandom.Text = (((int)buffer[1] << 8) + (int)buffer[0]).ToString();
-			keyBytes[12] = buffer[0];
-			keyBytes[13] = buffer[1];
-			CRC(keyBytes);
-
-			using (Rijndael aes = Rijndael.Create())
-			{
-				aes.Padding = PaddingMode.None;
-				aes.Mode = CipherMode.ECB;
-
-				using (ICryptoTransform xform = aes.CreateEncryptor(key.Secret, new byte[16]))
-				{
-					byte[] plainBytes = new byte[16];
-					xform.TransformBlock(keyBytes, 0, keyBytes.Length, plainBytes, 0);
-
-					string otp = tokenID + ModHex.Encode(plainBytes);
-					txtOTP.Text = otp;
-					return otp;
-				}
-			}
-		}
-
-		private void IncrementSession()
-		{
-			if (comboBox1.SelectedIndex < 0)
-				return;
-			System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-			YubikeysSection keysSection = (YubikeysSection)config.GetSection("tokens");
-			YubikeySettings key = keysSection.Keys[((YubikeySettings)comboBox1.SelectedItem).Name];
-			++key.SessionCounter;
-			key.UseCounter = 0;
-			key.StartTime = DateTime.Now;
-			byte[] buffer = new byte[3];
-			System.Security.Cryptography.RNGCryptoServiceProvider.Create().GetBytes(buffer);
-			key.TimeStamp = (((int)buffer[0]) << 16) | (((int)buffer[1]) << 8) | (int)buffer[2];
-			config.Save(ConfigurationSaveMode.Modified);
-			ConfigurationManager.RefreshSection("tokens");
-
-			int index = comboBox1.SelectedIndex;
-			YubikeysCollection keys = ((YubikeysCollection)comboBox1.DataSource);
-			keys[index] = key;
-			comboBox1.DataSource = keys;
-		}
-
 		private void btnCreateOTP_Click(object sender, EventArgs e)
 		{
-			if (comboBox1.SelectedIndex < 0)
+			if (cboKeys.SelectedIndex < 0)
 				return;
-			YubikeySettings key = ((YubikeysCollection)comboBox1.DataSource)[comboBox1.SelectedIndex];
-			string otp = CreateOTP(key);
+			YubikeySettings key = ((YubikeysCollection)cboKeys.DataSource)[cboKeys.SelectedIndex];
+			string otp = OTPCreator.CreateOTP(key, this);
+			txtOTP.Text = otp;
 			Clipboard.SetData(DataFormats.StringFormat, otp);
 		}
 
@@ -260,14 +257,19 @@ namespace Yubikey.TokenSimulator
 		private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			IncrementSession();
+			cmcboKeys.SelectedIndex = cboKeys.SelectedIndex;
 		}
 
 		private void manageKeysToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 			YubikeysSection keysSection = (YubikeysSection)config.GetSection("tokens");
-			new KeyManagement(keysSection.Keys).ShowDialog();
+			KeyManagement window = new KeyManagement(keysSection.Keys);
+			if (!this.Visible)
+				window.ShowInTaskbar = true;
+			window.ShowDialog();
 			config.Save(ConfigurationSaveMode.Modified);
+			ConfigurationManager.RefreshSection("tokens");
 			PopulateKeyList();
 		}
 
@@ -280,12 +282,30 @@ namespace Yubikey.TokenSimulator
 		{
 			System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 			SettingsSection settings = (SettingsSection)config.GetSection("settings");
-			DialogResult result = new Settings(settings).ShowDialog();
+			Settings window = new Settings(settings);
+			if (!this.Visible)
+				window.ShowInTaskbar = true;
+			DialogResult result = window.ShowDialog();
 			if (result == DialogResult.OK)
 			{
 				config.Save(ConfigurationSaveMode.Modified);
+				ConfigurationManager.RefreshSection("settings");
+				if (!this.Visible && !settings.MinimizeToSysTray)
+					notifyIcon1_Restore(sender, e);
 				RegisterHotkeys();
 			}
+		}
+
+		private void cmcboKeys_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			cboKeys.SelectedIndex = cmcboKeys.SelectedIndex;
+		}
+
+		private void notifyIcon1_Restore(object sender, EventArgs e)
+		{
+			Show();
+			WindowState = FormWindowState.Normal;
+			notifyIcon1.Visible = false;
 		}
 	}
 }

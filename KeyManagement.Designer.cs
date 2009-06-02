@@ -339,7 +339,8 @@ namespace Yubikey.TokenSimulator
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "KeyManagement";
-			this.Text = "Key Management";
+			this.ShowInTaskbar = false;
+			this.Text = "Yubikey Token Simulator - Key Management";
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
 			this.panel1.ResumeLayout(false);
 			this.panel1.PerformLayout();

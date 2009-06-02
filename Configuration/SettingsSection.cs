@@ -9,6 +9,8 @@ namespace Yubikey.TokenSimulator.Configuration
 	{
 		private const string EnterOTPProperty = "enterOTP";
 		private const string IncrementSessionProperty = "incrementSession";
+		private const string MinimizeToSysTrayProperty = "minimizeToSysTray";
+		private const string StartMinimizedProperty = "startMinimized";
 
 		[ConfigurationProperty(EnterOTPProperty)]
 		public EnterOTPSettings EnterOTP
@@ -22,6 +24,20 @@ namespace Yubikey.TokenSimulator.Configuration
 		{
 			get { return (HotKeySettings)base[IncrementSessionProperty]; }
 			set { base[IncrementSessionProperty] = value; }
+		}
+
+		[ConfigurationProperty(MinimizeToSysTrayProperty)]
+		public bool MinimizeToSysTray
+		{
+			get { return (bool)base[MinimizeToSysTrayProperty]; }
+			set { base[MinimizeToSysTrayProperty] = value; }
+		}
+
+		[ConfigurationProperty(StartMinimizedProperty)]
+		public bool StartMinimized
+		{
+			get { return (bool)base[StartMinimizedProperty]; }
+			set { base[StartMinimizedProperty] = value; }
 		}
 	}
 }

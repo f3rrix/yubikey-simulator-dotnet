@@ -61,6 +61,7 @@
     </Compile>
     <Compile Include="ModHex.cs" />
     <Compile Include="ModHexTable.cs" />
+    <Compile Include="OTPCreator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

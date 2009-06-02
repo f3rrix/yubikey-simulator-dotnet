@@ -39,7 +39,9 @@ namespace Yubikey.TokenSimulator
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.comboBox1 = new System.Windows.Forms.ComboBox();
+			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+			this.cboKeys = new System.Windows.Forms.ComboBox();
 			this.btnCreateOTP = new System.Windows.Forms.Button();
 			this.txtOTP = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
@@ -55,18 +57,27 @@ namespace Yubikey.TokenSimulator
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.manageKeysToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+			this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.cmmiRestore = new System.Windows.Forms.ToolStripMenuItem();
+			this.cmmiManageKeys = new System.Windows.Forms.ToolStripMenuItem();
+			this.cmmiOptions = new System.Windows.Forms.ToolStripMenuItem();
+			this.cmcboKeys = new System.Windows.Forms.ToolStripComboBox();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.cmmiExit = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
+			this.contextMenuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// comboBox1
+			// cboKeys
 			// 
-			this.comboBox1.FormattingEnabled = true;
-			this.comboBox1.Location = new System.Drawing.Point(13, 38);
-			this.comboBox1.Name = "comboBox1";
-			this.comboBox1.Size = new System.Drawing.Size(121, 21);
-			this.comboBox1.TabIndex = 0;
+			this.cboKeys.FormattingEnabled = true;
+			this.cboKeys.Location = new System.Drawing.Point(13, 38);
+			this.cboKeys.Name = "cboKeys";
+			this.cboKeys.Size = new System.Drawing.Size(121, 21);
+			this.cboKeys.TabIndex = 0;
 			// 
 			// btnCreateOTP
 			// 
@@ -205,19 +216,76 @@ namespace Yubikey.TokenSimulator
 			this.manageKeysToolStripMenuItem.Text = "&Manage Keys...";
 			this.manageKeysToolStripMenuItem.Click += new System.EventHandler(this.manageKeysToolStripMenuItem_Click);
 			// 
-			// exitToolStripMenuItem
-			// 
-			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.exitToolStripMenuItem.Text = "E&xit";
-			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-			// 
 			// optionsToolStripMenuItem
 			// 
 			this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
 			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.optionsToolStripMenuItem.Text = "&Options...";
 			this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
+			// 
+			// exitToolStripMenuItem
+			// 
+			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+			this.exitToolStripMenuItem.Text = "E&xit";
+			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+			// 
+			// notifyIcon1
+			// 
+			this.notifyIcon1.ContextMenuStrip = this.contextMenuStrip1;
+			this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+			this.notifyIcon1.Text = "Yubikey Token Simulator";
+			this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_Restore);
+			// 
+			// contextMenuStrip1
+			// 
+			this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmmiRestore,
+            this.cmmiManageKeys,
+            this.cmmiOptions,
+            this.cmcboKeys,
+            this.toolStripSeparator1,
+            this.cmmiExit});
+			this.contextMenuStrip1.Name = "contextMenuStrip1";
+			this.contextMenuStrip1.Size = new System.Drawing.Size(182, 123);
+			// 
+			// cmmiRestore
+			// 
+			this.cmmiRestore.Name = "cmmiRestore";
+			this.cmmiRestore.Size = new System.Drawing.Size(181, 22);
+			this.cmmiRestore.Text = "&Restore";
+			this.cmmiRestore.Click += new System.EventHandler(this.notifyIcon1_Restore);
+			// 
+			// cmmiManageKeys
+			// 
+			this.cmmiManageKeys.Name = "cmmiManageKeys";
+			this.cmmiManageKeys.Size = new System.Drawing.Size(181, 22);
+			this.cmmiManageKeys.Text = "&Manage Keys...";
+			this.cmmiManageKeys.Click += new System.EventHandler(this.manageKeysToolStripMenuItem_Click);
+			// 
+			// cmmiOptions
+			// 
+			this.cmmiOptions.Name = "cmmiOptions";
+			this.cmmiOptions.Size = new System.Drawing.Size(181, 22);
+			this.cmmiOptions.Text = "&Options...";
+			this.cmmiOptions.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
+			// 
+			// cmcboKeys
+			// 
+			this.cmcboKeys.Name = "cmcboKeys";
+			this.cmcboKeys.Size = new System.Drawing.Size(121, 21);
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(178, 6);
+			// 
+			// cmmiExit
+			// 
+			this.cmmiExit.Name = "cmmiExit";
+			this.cmmiExit.Size = new System.Drawing.Size(181, 22);
+			this.cmmiExit.Text = "E&xit";
+			this.cmmiExit.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
 			// Form1
 			// 
@@ -236,13 +304,15 @@ namespace Yubikey.TokenSimulator
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.txtOTP);
 			this.Controls.Add(this.btnCreateOTP);
-			this.Controls.Add(this.comboBox1);
+			this.Controls.Add(this.cboKeys);
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "Form1";
-			this.Text = "Yubikey.TokenSimulator";
+			this.Text = "Yubikey Token Simulator";
+			this.Resize += new System.EventHandler(this.Form1_Resize);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
+			this.contextMenuStrip1.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -250,7 +320,7 @@ namespace Yubikey.TokenSimulator
 
 		#endregion
 
-		private System.Windows.Forms.ComboBox comboBox1;
+		private System.Windows.Forms.ComboBox cboKeys;
 		private System.Windows.Forms.Button btnCreateOTP;
 		private System.Windows.Forms.TextBox txtOTP;
 		private System.Windows.Forms.Label label1;
@@ -268,6 +338,14 @@ namespace Yubikey.TokenSimulator
 		private System.Windows.Forms.ToolStripMenuItem manageKeysToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
+		private System.Windows.Forms.NotifyIcon notifyIcon1;
+		private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+		private System.Windows.Forms.ToolStripComboBox cmcboKeys;
+		private System.Windows.Forms.ToolStripMenuItem cmmiManageKeys;
+		private System.Windows.Forms.ToolStripMenuItem cmmiOptions;
+		private System.Windows.Forms.ToolStripMenuItem cmmiRestore;
+		private System.Windows.Forms.ToolStripMenuItem cmmiExit;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 	}
 }
 
