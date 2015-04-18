@@ -1,0 +1,1 @@
+Perfect for testing, this app can simulate an entire collection of Yubikeys. It will even allow you to register a global hotkey that will cause the app to type in the OTP, just like you were triggering an actual Yubikey.

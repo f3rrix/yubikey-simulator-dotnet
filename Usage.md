@@ -1,0 +1,5 @@
+Build project, or extract zip.
+
+Hotkeys can be configured under Menu -> Options. Virtual Yubikeys can be added, or modified under Menu -> Manage Keys. Any of these settings can also be configured by manually editing the config file. As demonstrated in the included config, the aes secret and public/private IDs are stored as Base64. (Included key(s) were generated from GRC's [Perfect Passwords Page](http://www.grc.com/pass/), not taken from actual Yubikeys, that I know of...)
+
+Launch application, select desired key from dropdown (will be treated as inserting the key, i.e. session counter will increment, and use counter and timestamp will reset), then either click the button to generate an OTP (will be copied to clipboard automatically), or position your cursor where you want the OTP to be entered, and press the hotkey.
